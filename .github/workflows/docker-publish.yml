@@ -69,7 +69,9 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.PUBLISH_ACTIONS }}
           
       - name: Pack
-        run: dotnet pack --configuration Release --no-build --output ./nupkg /p:Version=${GITHUB_REF_NAME#v}
+        run: >
+          VERSION=${{ github.event.release.tag_name }}
+          dotnet pack --configuration Release --no-build --output ./nupkg /p:Version=${VERSION:1}
 
       - name: NuGet login (Trusted Publishing)
         uses: NuGet/login@v1
