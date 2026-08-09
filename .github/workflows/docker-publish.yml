@@ -69,7 +69,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.PUBLISH_ACTIONS }}
           
       - name: Pack
-        run: >
+        run: |
           VERSION=${{ steps.semver.outputs.version_tag }}
           dotnet pack --configuration Release --no-build --output ./nupkg /p:Version=${VERSION:1}
 
