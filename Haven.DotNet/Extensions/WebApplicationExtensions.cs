@@ -11,6 +11,8 @@ namespace Haven.DotNet.Extensions;
 /// </summary>
 public static class WebApplicationExtensions
 {
+	private static IHavenService? _havenService;
+	
 	extension(WebApplication app)
 	{
 		/// <summary>
@@ -24,9 +26,13 @@ public static class WebApplicationExtensions
 			{
 				var handler = app.Services.GetService(typeof(IHavenDotNetHandler)) as IHavenDotNetHandler;
 
-				return handler == null
+				InitializeHavenService(app.Services);
+				
+				var message = handler == null
 					? throw new InvalidOperationException($"No handler implementation found for {nameof(IHavenDotNetHandler)}")
 					: await handler.Handle(request.Command, request.Args);
+				
+				await _havenService!.SendMessageAsync(message);
 			});
 
 			return app;
@@ -89,5 +95,11 @@ public static class WebApplicationExtensions
 		}
 		
 		return slashCommands;
+	}
+
+	private static void InitializeHavenService(IServiceProvider serviceProvider)
+	{
+		_havenService ??= serviceProvider.GetService(typeof(IHavenService)) as IHavenService ??
+		                  throw new InvalidOperationException($"No service implementation found for {nameof(IHavenService)}");
 	}
 }
