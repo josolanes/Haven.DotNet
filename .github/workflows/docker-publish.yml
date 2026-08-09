@@ -69,7 +69,9 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.PUBLISH_ACTIONS }}
           
       - name: Pack
-        run: dotnet pack --configuration Release --no-build --output ./nupkg /p:Version=${${{steps.semver.outputs.version_tag}}#v}
+        run: >
+          TAG=${{ steps.semver.outputs.version_tag }}
+          dotnet pack --configuration Release --no-build --output ./nupkg /p:Version=${TAG#v}
 
       - name: NuGet login (Trusted Publishing)
         uses: NuGet/login@v1
