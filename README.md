@@ -4,6 +4,9 @@
 [Haven bot developer guide](https://github.com/ancsemi/Haven/blob/main/GUIDE.md#-bot--webhook-developer-guide) used for reference.
 Haven.DotNet was created to enable using Haven bots in .NET 10 and is written per the Haven documentation.
 
+### Nuget Package
+Install `Haven.DotNet` via [NuGet](https://www.nuget.org/packages/Haven.DotNet)
+
 ### Library Usage Steps
 1. Install `Haven.DotNet` via NuGet
 2. Implement the `IHavenDotNetHandler` class and `Handle` method
