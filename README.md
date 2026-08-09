@@ -45,6 +45,6 @@ For an example application using Haven.DotNet, see [ContainrBot](https://github.
     * Right click a channel -> Webhooks -> [Bot Name] -> Create -> Copy the URL
     * If you're the Haven server admin, you can also retrieve the token later in Settings -> Admin -> Bots -> Manage Bots -> Click Bot -> [End of Webhook URL, after the /api/webhooks/]
 2. Add the callback url to your bot
-    * Settings -> Admin -> Bots -> Manage Bots -> Click Bot -> Callback URL
+    * Settings -> Admin -> Bots -> Manage Bots -> Click Bot -> Callback URL. `Haven.DotNet` assumes a callback URL endpoint of `/callback`
     * NOTE: Private/internal URLs are not supported by Haven, see [SSRF callback safety check for details](https://github.com/ancsemi/Haven/blob/0fdaf322b702ea9784e4e05adfc7e1ae8a118611/src/socketHandlers/index.js#L958)
         * If you use a local IP or standard local address, you will see errors in the Haven logs like `Bot command /containr: callback URL blocked by SSRF guard` and the callback url will not be reached
