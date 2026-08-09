@@ -70,7 +70,7 @@ jobs:
           
       - name: Pack
         run: >
-          VERSION=${{ github.event.release.tag_name }}
+          VERSION=${{ steps.semver.outputs.version_tag }}
           dotnet pack --configuration Release --no-build --output ./nupkg /p:Version=${VERSION:1}
 
       - name: NuGet login (Trusted Publishing)
