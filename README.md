@@ -42,7 +42,7 @@ For an example application using Haven.DotNet, see [ContainrBot](https://github.
 
 ### Haven Bot Setup
 1. Create a bot in Haven
-    * Right click a channel -> Webhooks -> [Bot Name] -> Create -> Copy the URL
+    * Right-click a channel -> Webhooks -> [Bot Name] -> Create -> Copy the URL
     * If you're the Haven server admin, you can also retrieve the token later in Settings -> Admin -> Bots -> Manage Bots -> Click Bot -> [End of Webhook URL, after the /api/webhooks/]
 2. Add the callback url to your bot
     * Settings -> Admin -> Bots -> Manage Bots -> Click Bot -> Callback URL. `Haven.DotNet` assumes a callback URL endpoint of `/callback`

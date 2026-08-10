@@ -1,8 +1,11 @@
 using System.Reflection;
+using System.Text.Json;
 using Haven.DotNet.Attributes;
 using Haven.DotNet.Handlers;
 using Haven.DotNet.Models;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 
 namespace Haven.DotNet.Extensions;
 
@@ -22,17 +25,50 @@ public static class WebApplicationExtensions
 		/// <exception cref="InvalidOperationException">Thrown if no handler implementation is found for <see cref="IHavenDotNetHandler"/></exception>
 		public WebApplication UseHavenDotNetCallback()
 		{
-			app.MapPost("/callback", async (CallbackRequest request) =>
+			app.MapPost("/callback", async (HttpContext httpContext, ILogger<IHavenService> logger) =>
 			{
 				var handler = app.Services.GetService(typeof(IHavenDotNetHandler)) as IHavenDotNetHandler;
 
 				InitializeHavenService(app.Services);
-				
-				var message = handler == null
-					? throw new InvalidOperationException($"No handler implementation found for {nameof(IHavenDotNetHandler)}")
-					: await handler.Handle(request.Command, request.Args);
-				
-				await _havenService!.SendMessageAsync(message);
+
+				var shouldHandle = true;
+				var body = string.Empty;
+
+				// Perform HMAC signature verification
+				if (httpContext.Request.Headers.ContainsKey("X-Haven-Signature"))
+				{
+					using var reader = new StreamReader(httpContext.Request.Body);
+					body = await reader.ReadToEndAsync();
+					
+					var expectedSignature = _havenService!.GetHmacSignature(body);
+
+					if (expectedSignature != httpContext.Request.Headers["X-Haven-Signature"])
+					{
+						logger.LogWarning("HMAC Signature Mismatch on callback request");
+						shouldHandle = false;
+					}
+					else
+					{
+						shouldHandle = true;
+					}
+				}
+
+				if (shouldHandle)
+				{
+					var jsonOptions = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+					var callbackRequest = JsonSerializer.Deserialize<CallbackRequest>(body, jsonOptions);
+
+					if (callbackRequest == null)
+					{
+						throw new InvalidOperationException("Unable to deserialize callback request");
+					}
+					
+					var message = handler == null
+						? throw new InvalidOperationException($"No handler implementation found for {nameof(IHavenDotNetHandler)}")
+						: await handler.Handle(callbackRequest.Command, callbackRequest.Args);
+
+					await _havenService!.SendMessageAsync(message);
+				}
 			});
 
 			return app;
