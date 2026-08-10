@@ -1,4 +1,6 @@
 using System.Net.Http.Json;
+using System.Security.Cryptography;
+using System.Text;
 using Haven.DotNet.Models;
 
 namespace Haven.DotNet;
@@ -6,7 +8,8 @@ namespace Haven.DotNet;
 /// <inheritdoc />
 public class HavenService(
 	IHttpClientFactory httpClientFactory,
-	string token) : IHavenService
+	string token,
+	string? webhookSecret = null) : IHavenService
 {
 	/// <inheritdoc />
 	public async Task SendMessageAsync(string message)
@@ -42,5 +45,19 @@ public class HavenService(
 	{
 		var httpClient = httpClientFactory.CreateClient(nameof(Haven.DotNet));
 		await httpClient.DeleteAsync($"/api/webhooks/{token}/commands/{commandName}");
+	}
+	
+	/// <inheritdoc />
+	public string GetHmacSignature(string payload)
+	{
+		if (string.IsNullOrEmpty(webhookSecret))
+		{
+			return string.Empty;
+		}
+		
+		using var hmac = new HMACSHA256(Encoding.UTF8.GetBytes(webhookSecret));
+		
+		var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(payload));
+		return Convert.ToHexString(computedHash).ToLowerInvariant();
 	}
 }

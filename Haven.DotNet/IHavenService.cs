@@ -34,4 +34,11 @@ public interface IHavenService
 	/// <param name="commandName">The base command name to delete</param>
 	/// <returns></returns>
 	Task DeleteCommand(string commandName);
+
+	/// <summary>
+	/// Generates a HMAC signature for the given payload and provided webhook secret
+	/// </summary>
+	/// <param name="payload">The payload to generate a HMAC signature for</param>
+	/// <returns>An HMAC signature</returns>
+	string GetHmacSignature(string payload);
 }
