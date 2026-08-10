@@ -32,14 +32,12 @@ public static class WebApplicationExtensions
 				InitializeHavenService(app.Services);
 
 				var shouldHandle = true;
-				var body = string.Empty;
+				using var reader = new StreamReader(httpContext.Request.Body);
+				var body = await reader.ReadToEndAsync();
 
 				// Perform HMAC signature verification
 				if (httpContext.Request.Headers.ContainsKey("X-Haven-Signature"))
 				{
-					using var reader = new StreamReader(httpContext.Request.Body);
-					body = await reader.ReadToEndAsync();
-					
 					var expectedSignature = _havenService!.GetHmacSignature(body);
 
 					if (expectedSignature != httpContext.Request.Headers["X-Haven-Signature"])
