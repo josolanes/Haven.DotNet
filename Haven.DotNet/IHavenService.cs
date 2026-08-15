@@ -13,7 +13,7 @@ public interface IHavenService
 	/// </summary>
 	/// <param name="message">The message to send</param>
 	/// <returns></returns>
-	Task SendMessageAsync(string message);
+	Task SendMessage(string message);
 
 	/// <summary>
 	/// Gets the subcommands registered to the bot
