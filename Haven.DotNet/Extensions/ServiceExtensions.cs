@@ -20,13 +20,13 @@ public static class ServiceExtensions
 		/// <returns>An <see cref="IServiceCollection"/> with Haven.DotNet support added</returns>
 		public IServiceCollection AddHavenDotNet<T>(string baseUrl, string token, string? webhookSecret = null) where T : class, IHavenDotNetHandler
 		{
-			services.AddHttpClient<IHavenService>(nameof(Haven.DotNet), client =>
+			services.AddHttpClient<IHavenService>(nameof(DotNet), client =>
 			{
 				client.BaseAddress = new Uri(baseUrl);
 				client.DefaultRequestHeaders.Add("Accept", "application/json");
 			});
 			
-			services.AddTransient<IHavenService>(provider => new HavenService(provider.GetRequiredService<IHttpClientFactory>(), token, webhookSecret));
+			services.AddTransient<IHavenService>(provider => new HavenService(provider.GetRequiredService<HttpClient>(), token, webhookSecret));
 			services.AddTransient<IHavenDotNetHandler, T>();
 			
 			return services;

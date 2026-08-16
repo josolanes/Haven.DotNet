@@ -65,7 +65,7 @@ public static class WebApplicationExtensions
 						? throw new InvalidOperationException($"No handler implementation found for {nameof(IHavenDotNetHandler)}")
 						: await handler.Handle(callbackRequest.Command, callbackRequest.Args);
 
-					await _havenService!.SendMessageAsync(message);
+					await _havenService!.SendMessage(message);
 				}
 			});
 

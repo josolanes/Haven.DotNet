@@ -60,3 +60,4 @@ nunit-*.xml
 /.idea/indexLayout.xml
 /.idea/vcs.xml
 /.idea/
+/Haven.DotNet.sln.DotSettings.user
