@@ -14,7 +14,7 @@ public class HavenService(
 	/// <inheritdoc />
 	public async Task SendMessage(string message)
 	{
-		var httpClient = httpClientFactory.CreateClient();
+		var httpClient = httpClientFactory.CreateClient(nameof(DotNet));
 		await httpClient.PostAsync($"/api/webhooks/{token}",
 			JsonContent.Create(new SendMessageRequest
 			{
@@ -25,7 +25,7 @@ public class HavenService(
 	/// <inheritdoc />
 	public async Task<List<string>> GetSubcommands()
 	{
-		var httpClient = httpClientFactory.CreateClient();
+		var httpClient = httpClientFactory.CreateClient(nameof(DotNet));
 		var response = await httpClient.GetAsync($"/api/webhooks/{token}/commands");
 		var commands = await response.Content.ReadFromJsonAsync<GetCommandsResponse>();
 		return commands?.Commands.FirstOrDefault()?.Subcommands?.Select(c => c.Name).ToList() ?? [];
@@ -34,7 +34,7 @@ public class HavenService(
 	/// <inheritdoc />
 	public async Task SetCommands(RegisterCommandRequest commands)
 	{
-		var httpClient = httpClientFactory.CreateClient();
+		var httpClient = httpClientFactory.CreateClient(nameof(DotNet));
 		await httpClient.PostAsync($"/api/webhooks/{token}/commands",
 			JsonContent.Create(commands));
 	}
@@ -42,7 +42,7 @@ public class HavenService(
 	/// <inheritdoc />
 	public async Task DeleteCommand(string commandName)
 	{
-		var httpClient = httpClientFactory.CreateClient();
+		var httpClient = httpClientFactory.CreateClient(nameof(DotNet));
 		await httpClient.DeleteAsync($"/api/webhooks/{token}/commands/{commandName}");
 	}
 	
