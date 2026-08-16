@@ -148,6 +148,11 @@ public class HavenServiceTests
 	
 	private static HavenService CreateHavenService(MockHttpClient client, string? webhookSecret)
 	{
-		return new HavenService(client.Object, token, webhookSecret);
+		var mockHttpClientFactory = new Mock<IHttpClientFactory>();
+		mockHttpClientFactory
+			.Setup(f => f.CreateClient(It.IsAny<string>()))
+			.Returns(client.Object);
+		
+		return new HavenService(mockHttpClientFactory.Object, token, webhookSecret);
 	}
 }

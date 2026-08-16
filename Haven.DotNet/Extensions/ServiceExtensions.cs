@@ -26,7 +26,7 @@ public static class ServiceExtensions
 				client.DefaultRequestHeaders.Add("Accept", "application/json");
 			});
 			
-			services.AddTransient<IHavenService>(provider => new HavenService(provider.GetRequiredService<HttpClient>(), token, webhookSecret));
+			services.AddTransient<IHavenService>(provider => new HavenService(provider.GetRequiredService<IHttpClientFactory>(), token, webhookSecret));
 			services.AddTransient<IHavenDotNetHandler, T>();
 			
 			return services;
