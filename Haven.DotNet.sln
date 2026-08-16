@@ -12,6 +12,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_Solution Items", "_Solutio
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Haven.DotNet.Tests", "Haven.DotNet.Tests\Haven.DotNet.Tests.csproj", "{1B198F50-F196-44AA-9933-7CEBDA1547E9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Haven.DotNet.Tests.Integration", "Haven.DotNet.Tests.Integration\Haven.DotNet.Tests.Integration.csproj", "{5802AF25-FDE9-4569-A566-8D03BC795DAC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -26,5 +28,9 @@ Global
 		{1B198F50-F196-44AA-9933-7CEBDA1547E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1B198F50-F196-44AA-9933-7CEBDA1547E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1B198F50-F196-44AA-9933-7CEBDA1547E9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5802AF25-FDE9-4569-A566-8D03BC795DAC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5802AF25-FDE9-4569-A566-8D03BC795DAC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5802AF25-FDE9-4569-A566-8D03BC795DAC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5802AF25-FDE9-4569-A566-8D03BC795DAC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
