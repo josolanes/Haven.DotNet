@@ -80,11 +80,13 @@ public static class WebApplicationExtensions
 		/// <typeparam name="T">The class implementing the <see cref="IHavenDotNetHandler"/> interface</typeparam>
 		public async Task RegisterHavenSlashCommand<T>(string slashCommandName, string slashCommandDescription)
 		{
-			await RegisterCommands<T>(app.Services, slashCommandName, slashCommandDescription);
+			var logger = app.Services.GetService(typeof(ILogger<IHavenService>)) as ILogger<IHavenService>;
+			
+			await RegisterCommands<T>(app.Services, slashCommandName, slashCommandDescription, logger!);
 		}
 	}
 	
-	private static async Task RegisterCommands<T>(IServiceProvider services, string slashCommandName, string slashCommandDescription)
+	private static async Task RegisterCommands<T>(IServiceProvider services, string slashCommandName, string slashCommandDescription, ILogger<IHavenService> logger)
 	{
 		var chatService = services.GetService(typeof(IHavenService)) as IHavenService;
 		var newCommands = GetCommandsFromAttributes<T>();
@@ -94,7 +96,14 @@ public static class WebApplicationExtensions
 			throw new InvalidOperationException($"No service implementation found for {nameof(IHavenService)}");
 		}
 
-		await chatService.DeleteCommand(slashCommandName);
+		try
+		{
+			await chatService.DeleteCommand(slashCommandName);
+		}
+		catch (Exception e)
+		{
+			logger.LogWarning(e, "Failed to delete slash command {SlashCommandName}. This could happen on the first startup, continuing...", slashCommandName);
+		}
 
 		var slashCommand = new RegisterCommandRequest()
 		{

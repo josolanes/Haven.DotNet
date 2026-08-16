@@ -8,17 +8,17 @@ namespace Haven.DotNet.Tests;
 
 public class HavenServiceTests
 {
-	private const string token = "some token";
+	private const string Token = "some token";
 	
 	[TestCase("some message")]
 	public async Task SendMessage_Success(string message)
 	{
-		var httpClient = CreateMockHttp(HttpMethod.Post, $"/api/webhooks/{token}");
+		var httpClient = CreateMockHttp(HttpMethod.Post, $"/api/webhooks/{Token}");
 		
-		var havenService = CreateHavenService(httpClient, token);
+		var havenService = CreateHavenService(httpClient, Token);
 		await havenService.SendMessage(message);
 		
-		httpClient.Verify(HttpMethod.Post, $"/api/webhooks/{token}", Times.Once());
+		httpClient.Verify(HttpMethod.Post, $"/api/webhooks/{Token}", Times.Once());
 		Assert.That(httpClient.Request!.Content, Is.InstanceOf<JsonContent>());
 		Assert.That(((JsonContent)httpClient.Request!.Content!).Value, Is.InstanceOf<SendMessageRequest>());
 		Assert.That(((SendMessageRequest)((JsonContent)httpClient.Request!.Content!).Value!).Content, Is.EqualTo(message));
@@ -58,19 +58,19 @@ public class HavenServiceTests
 			{
 				Content = JsonContent.Create(response)
 			},
-			$"/api/webhooks/{token}/commands");
+			$"/api/webhooks/{Token}/commands");
 		
-		var havenService = CreateHavenService(httpClient, token);
+		var havenService = CreateHavenService(httpClient, Token);
 		var actualResponse = await havenService.GetSubcommands();
 		
-		httpClient.Verify(HttpMethod.Get, $"/api/webhooks/{token}/commands", Times.Once());
+		httpClient.Verify(HttpMethod.Get, $"/api/webhooks/{Token}/commands", Times.Once());
 		Assert.That(actualResponse, Is.EqualTo(
 			response.Commands.FirstOrDefault()!.Subcommands!.Select(c => c.Name)));
 	}
 	
 	public async Task SetCommands_Success()
 	{
-		var httpClient = CreateMockHttp(HttpMethod.Post, $"/api/webhooks/{token}/commands");
+		var httpClient = CreateMockHttp(HttpMethod.Post, $"/api/webhooks/{Token}/commands");
 
 		var requestContent = new RegisterCommandRequest
 		{
@@ -91,10 +91,10 @@ public class HavenServiceTests
 			]
 		};
 		
-		var havenService = CreateHavenService(httpClient, token);
+		var havenService = CreateHavenService(httpClient, Token);
 		await havenService.SetCommands(requestContent);
 		
-		httpClient.Verify(HttpMethod.Post, $"/api/webhooks/{token}/commands", Times.Once());
+		httpClient.Verify(HttpMethod.Post, $"/api/webhooks/{Token}/commands", Times.Once());
 		Assert.That(httpClient.Request!.Content, Is.InstanceOf<JsonContent>());
 		Assert.That(((JsonContent)httpClient.Request!.Content!).Value, Is.InstanceOf<RegisterCommandRequest>());
 		Assert.That(((RegisterCommandRequest)((JsonContent)httpClient.Request!.Content!).Value!), Is.EqualTo(requestContent));
@@ -104,12 +104,12 @@ public class HavenServiceTests
 	[TestCase("command two")]
 	public async Task DeleteCommand_Success(string commandName)
 	{
-		var httpClient = CreateMockHttp(HttpMethod.Delete, $"/api/webhooks/{token}/commands/{commandName}");
+		var httpClient = CreateMockHttp(HttpMethod.Delete, $"/api/webhooks/{Token}/commands/{commandName}");
 		
-		var havenService = CreateHavenService(httpClient, token);
+		var havenService = CreateHavenService(httpClient, Token);
 		await havenService.DeleteCommand(commandName);
 		
-		httpClient.Verify(HttpMethod.Delete, $"/api/webhooks/{token}/commands/{commandName}", Times.Once());
+		httpClient.Verify(HttpMethod.Delete, $"/api/webhooks/{Token}/commands/{commandName}", Times.Once());
 	}
 	
 	[TestCase("test payload", "some secret","ce5774cf3f063d3e9000e5bd3e8cd8d359029abbeb733dc3fb4901edc9690003")]
@@ -153,6 +153,6 @@ public class HavenServiceTests
 			.Setup(f => f.CreateClient(It.IsAny<string>()))
 			.Returns(client.Object);
 		
-		return new HavenService(mockHttpClientFactory.Object, token, webhookSecret);
+		return new HavenService(mockHttpClientFactory.Object, Token, webhookSecret);
 	}
 }
