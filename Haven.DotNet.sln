@@ -8,6 +8,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_Solution Items", "_Solutio
 		LICENSE = LICENSE
 		.gitignore = .gitignore
 		.github\workflows\docker-publish.yml = .github\workflows\docker-publish.yml
+		.github\dependabot.yml = .github\dependabot.yml
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Haven.DotNet.Tests", "Haven.DotNet.Tests\Haven.DotNet.Tests.csproj", "{1B198F50-F196-44AA-9933-7CEBDA1547E9}"
